@@ -32,4 +32,4 @@ python3 app.py
 
 ---
 
-Thank you for visiting -- Please leave a star :star if you like!
+Thank you for visiting -- Please leave a star ⭐ if you like!
