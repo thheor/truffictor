@@ -6,9 +6,17 @@ import time
 import requests
 import threading
 import tkinter as tk
+import asyncio
+from desktop_notifier import DesktopNotifier
 
 face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
 # face_mesh = "multi_face_landmarks.task"
+
+notifier = DesktopNotifier()
+
+
+async def notif():
+    await notifier.send(title="ESP32", message="Harap masukkan ip ESP32 anda")
 
 
 def calculate_distance(point1, point2):
@@ -191,7 +199,7 @@ def open_detection(detection_type, esp32_ip):
     if detection_type == "Deteksi Kantuk":
         deteksi_kantuk(esp32_ip)
     elif detection_type == "Deteksi Hilang Kendali 1":
-        deteksi_hilang_kendali("HILANGKENDALI.mp4", esp32_ip)
+        deteksi_hilang_kendali("road.mp4", esp32_ip)
     elif detection_type == "Deteksi Hilang Kendali 2":
         deteksi_hilang_kendali("TERKENDALI.mp4", esp32_ip)
     elif detection_type == "Deteksi Hilang Kendali 3":
@@ -211,7 +219,7 @@ def main():
         if esp32_ip:
             open_detection(detection_type, esp32_ip)
         else:
-            tk.messagebox.showwarning("Peringatan", "Harap masukkan IP ESP32")
+            asyncio.run(notif())
 
     tk.Button(
         root, text="DETEKSI KANTUK", command=lambda: start_detection("Deteksi Kantuk")
