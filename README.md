@@ -1,6 +1,20 @@
 ![Truffictor](./public/banner.png)
+[![Python](https://img.shields.io/badge/Python-3.7--3.12-blue?logo=python)](https://www.python.org/)
+[![MediaPipe](https://img.shields.io/badge/AI-MediaPipe-brightgreen)](https://google.github.io/mediapipe/)
+[![ESP32](https://img.shields.io/badge/Hardware-ESP32-red?logo=espressif)](https://www.espressif.com/)
 
-Truffictor is a research product that qualified as a finalist in the Indonesian Student Research Olympiad competition. Truffictor aims to optimize truck driver safety with AI vision. This product is built using OpenCV, mediapipe, and ESP32 DevKit.
+**Truffictor** is an innovative research product that qualified as a finalist in the **Indonesian Student Research Olympiad competition (OPSI)**. Truffictor aims to optimize truck driver safety with AI vision. This product is built using OpenCV, mediapipe, and ESP32 DevKit.
+
+---
+
+## Key Features
+
+- **Real-time Fatigue Detection:** Uses MediaPipe to track eye closure and facial landmarks.
+- **IoT Integration:** Comunication between Python (AI) and ESP32 for instant alerts.
+- **Auditory and Visual Warnings:** Activates buzzers and LED signals to wake the driver.
+- **Visual Road Tracker:** Visualize the road markings and give alert if the truck is escape from the path.
+
+---
 
 ## Installation
 
@@ -14,6 +28,8 @@ Truffictor is a research product that qualified as a finalist in the Indonesian 
 - Push button
 - Bread board
 - Jumper cable
+
+_Note: If you don't have the hardware in prerequisites, you can skip **Step 2 & 3** and input a random ip in the last step._
 
 ### Step 1: Set Up Environment
 
@@ -38,9 +54,9 @@ venv\Scripts\activate # On Windows
 pip install -r requirements.txt
 ```
 
-_Note: If you are on Linux, you need to install **python3-tk** via your package manager_
+_Note: If you are on Linux, you need to install `python3-tk` via your package manager_
 
-### Step 2: Set Up Circuit and Diagram
+### Step 2: Wiring Diagram
 
 Pair ESP32 to bread board then connect buzzer1's pin to 5, buzzer2's pin to 18, and button's pin to 15. Every negative pin of every buzzer must be connected to GND. Your final circuit should look like this
 
@@ -63,6 +79,8 @@ You can use any code editor, but I recommend using [Arduino IDE](https://www.ard
    | SSID      | Password   |
    | --------- | ---------- |
    | **Truff** | Truff12345 |
+
+---
 
 ## Run Code
 
