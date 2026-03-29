@@ -1,24 +1,26 @@
 ![Truffictor](./public/banner.png)
-[![Python](https://img.shields.io/badge/Python-3.7--3.12-blue?logo=python)](https://www.python.org/)
-[![MediaPipe](https://img.shields.io/badge/AI-MediaPipe-brightgreen)](https://google.github.io/mediapipe/)
-[![ESP32](https://img.shields.io/badge/Hardware-ESP32-red?logo=espressif)](https://www.espressif.com/)
+<div align="center">
+   <img src="https://img.shields.io/badge/Python-3.7--3.12-blue?logo=python" alt="Python" />
+   <img src="https://img.shields.io/badge/AI-MediaPipe-brightgreen" alt="MediaPipe">
+   <img src="https://img.shields.io/badge/Hardware-ESP32-red?logo=espressif" alt="ESP32" />
+</div>
 
-**Truffictor** is an innovative research product that qualified as a finalist in the **Indonesian Student Research Olympiad competition (OPSI)**. Truffictor aims to optimize truck driver safety with AI vision. This product is built using OpenCV, mediapipe, and ESP32 DevKit.
+**Truffictor** is an innovative research product that qualified as a finalist in the **Indonesian Student Research Olympiad Competition (OPSI)**. Truffictor aims to optimize truck driver safety with AI vision. This product is built using OpenCV, MediaPipe, and ESP32 DevKit.
 
 ---
 
-## Key Features
+## Key Features ⭐
 
 - **Real-time Fatigue Detection:** Uses MediaPipe to track eye closure and facial landmarks.
 - **IoT Integration:** Comunication between Python (AI) and ESP32 for instant alerts.
 - **Auditory and Visual Warnings:** Activates buzzers and LED signals to wake the driver.
-- **Visual Road Tracker:** Visualize the road markings and give alert if the truck is escape from the path.
+- **Visual Road Tracker:** Visualize the road markings and give alert if the truck escape from the path.
 
 ---
 
-## Installation
+## Installation 🚀
 
-### Prerequisites
+### Prerequisites 🛠
 
 - Python 3.7 - 3.12 (Latest version of Pyhton (3.13) is not officially supported by the standard MediaPipe package via PyPi)
 - ESP32, Arduino, Rasberry Pi, or other microcontroller
@@ -40,7 +42,7 @@ git clone https://github.com/thheor/truffictor.git
 cd truffictor
 ```
 
-1. Set Up Environment (Optional)
+2. Set Up Environment (Optional)
 
 ```bash
 python3 -m venv venv
@@ -48,7 +50,7 @@ source venv/bin/activate # On Linux or MacOs
 venv\Scripts\activate # On Windows
 ```
 
-1. Install Dependencies
+2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -82,9 +84,9 @@ You can use any code editor, but I recommend using [Arduino IDE](https://www.ard
 
 ---
 
-## Run Code
+## 🖥 Execution
 
-Open terminal or command line in your PC and change the current directory to this project folder. Open with your favorite code editor (I use neovim btw). Run this command below.
+Open a terminal or command line in your PC and change the current directory to this project folder. Open with your favorite code editor (I use neovim btw). Run this following command.
 
 ```bash
 python3 app.py
