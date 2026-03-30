@@ -104,7 +104,7 @@ python3 app.py
 python app.py
 ```
 
-If you want to use your camera instead of using the given video assets, update this the following code.
+If you want to use your camera instead of using the given video assets, update the following code.
 
 ```python
 def deteksi_kantuk(esp32_ip):
@@ -115,10 +115,10 @@ def deteksi_kantuk(esp32_ip):
 def deteksi_hilang_kendali(video_path, esp32_ip):
     cap = cv2.VideoCapture(video_path) # Run with given assets
     cap = cv2.VideoCapture(0) # Run with your camera
-    
+    ...
 ```
 
-The number `0` represents the ID of your camera. If you are using more than one camera, you must try one by one from number 0 to `number of camera - 1`.
+The number `0` represents the ID of your camera. If you are using more than one camera, you must try one by one from number `0` to `number of camera - 1`.
 
 ---
 
