@@ -7,8 +7,6 @@
 
 **Truffictor** is an innovative research product that qualified as a finalist in the **Indonesian Student Research Olympiad Competition (OPSI)**. Truffictor aims to optimize truck driver safety with AI vision. This product is built using OpenCV, MediaPipe, and ESP32 DevKit.
 
----
-
 ## Key Features ⭐
 
 - **Real-time Fatigue Detection:** Uses MediaPipe to track eye closure and facial landmarks.
@@ -51,7 +49,7 @@ venv\Scripts\activate # On Windows
 
 If you are on Linux, you need to add ![DejaVu Sans](https://dejavu-fonts.github.io/) font in `venv/lib/python3.11/site-packages/cv2/qt/fonts/`.
 
-2. Install Dependencies
+3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -73,6 +71,7 @@ Pair ESP32 to bread board then connect all the components as per the following t
 |Trig Pin   |  23  |
 |Echo Pin   |  22  |
 All negative pin of each components should be connected to GND. Your final diagram should look like this.
+
 ![circuit design](./public/circuit-design.jpg)
 
 ### Step 3: Set Up ESP32 Code
@@ -93,7 +92,6 @@ You can use any code editor, but I recommend using [Arduino IDE](https://www.ard
    | --------- | ---------- |
    | YOUR_SSID | YOUR_PASSWORD |
 
----
 
 ## 🖥 Execution
 
@@ -104,6 +102,22 @@ python3 app.py
 # or
 python app.py
 ```
+
+If you want to use your camera instead of using the given video assets, update this the following code.
+
+```python
+def deteksi_kantuk(esp32_ip):
+    cap = cv2.VideoCapture("./public/drowsiness.mp4") # Run with given assets 
+    cap = cv2.VideoCapture(0) # Run with your camera 
+    ...
+
+def deteksi_hilang_kendali(video_path, esp32_ip):
+    cap = cv2.VideoCapture(video_path) # Run with given assets
+    cap = cv2.VideoCapture(0) # Run with your camera
+    
+```
+
+The number `0` represents the ID of your camera. If you are using more than one camera, you must try one by one from number 0 to `number of camera - 1`.
 
 ---
 
