@@ -10,7 +10,6 @@ import asyncio
 from desktop_notifier import DesktopNotifier
 
 face_mesh = mp.solutions.face_mesh.FaceMesh(refine_landmarks=True)
-# face_mesh = "multi_face_landmarks.task"
 
 notifier = DesktopNotifier()
 
@@ -25,13 +24,13 @@ def calculate_distance(point1, point2):
 
 def send_alert_to_esp32(esp32_ip, buzzer_type):
     try:
-        requests.get(f"http://{esp32_ip}/buzzer1")
+        requests.get(f"http://{esp32_ip}/trigger")
     except requests.exceptions.RequestException as e:
         print(f"Error sending request to ESP32: {e}")
 
 
 def deteksi_kantuk(esp32_ip):
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("./public/drowsiness.mp4")
     drowsiness_start_time = None
     alert_sent = False
     threshold_distance = 0.0151
@@ -66,8 +65,6 @@ def deteksi_kantuk(esp32_ip):
                 y = int(landmark.y * frame_h)
                 cv2.circle(frame, (x, y), 3, (0, 255, 0), -1)
 
-            kantuk_terdeteksi = False
-
             if (
                 left_eye_distance < threshold_distance
                 and right_eye_distance < threshold_distance
@@ -79,6 +76,7 @@ def deteksi_kantuk(esp32_ip):
                     time.time() - drowsiness_start_time >= detection_time
                     and not alert_sent
                 ):
+                    print("KANTUK TERDETEKSI")
                     cv2.putText(
                         frame,
                         "KANTUK TERDETEKSI",
@@ -88,26 +86,18 @@ def deteksi_kantuk(esp32_ip):
                         (0, 0, 255),
                         2,
                     )
-                    threading.Thread(
-                        target=send_alert_to_esp32, args=(esp32_ip, 2)
-                    ).start()
-                    alert_sent = True
-                    kantuk_terdeteksi = True
-                else:
-                    drowsiness_start_time = None
-                    alert_sent = False
-                    kantuk_terdeteksi = False
 
-                if kantuk_terdeteksi:
-                    cv2.putText(
-                        frame,
-                        "KANTUK TERDETEKSI",
-                        (50, 100),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        1,
-                        (0, 0, 255),
-                        2,
-                    )
+                    alert_sent = True
+
+                    if alert_sent:
+                        threading.Thread(
+                            target=send_alert_to_esp32, args=(esp32_ip, 2)
+                        ).start()
+                        alert_sent = False
+
+            else:
+                drowsiness_start_time = None
+                alert_sent = False
 
         cv2.imshow("Deteksi Kantuk", frame)
 
@@ -133,7 +123,8 @@ def draw_lines(image, lines):
     if lines is not None:
         for line in lines:
             x1, y1, x2, y2 = line[0]
-            if 300 <= y1 <= 700 and 300 <= y2 <= 700:
+            print(x1, x2, y1, y2)
+            if 130 <= y1 <= 400 and 130 <= y2 <= 400:
                 cv2.line(line_image, (x1, y1), (x2, y2), (0, 255, 0), 5)
     return cv2.addWeighted(image, 0.8, line_image, 1.0, 0.0)
 
@@ -153,7 +144,7 @@ def check_lines_in_box(image, lines, box, esp32_ip, sensor_id):
             ):
                 cv2.putText(
                     image,
-                    f"MOBIL HILANG KENDALI {sensor_id}",
+                    "TRUCK HILANG KENDALI",
                     (50, 50 + (sensor_id - 1) * 40),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1,
@@ -168,8 +159,7 @@ def check_lines_in_box(image, lines, box, esp32_ip, sensor_id):
 def deteksi_hilang_kendali(video_path, esp32_ip):
     cap = cv2.VideoCapture(video_path)
 
-    sensor_box1 = (700, 550, 750, 650)
-    sensor_box2 = (600, 550, 650, 650)
+    sensor_box1 = (250, 230, 350, 260)
 
     while True:
         ret, frame = cap.read()
@@ -181,10 +171,8 @@ def deteksi_hilang_kendali(video_path, esp32_ip):
         lines_image = draw_lines(frame, lines)
 
         draw_sensor_box(lines_image, sensor_box1)
-        draw_sensor_box(lines_image, sensor_box2)
 
         check_lines_in_box(lines_image, lines, sensor_box1, esp32_ip, 1)
-        check_lines_in_box(lines_image, lines, sensor_box2, esp32_ip, 2)
 
         cv2.imshow("Deteksi Hilang Kendali", lines_image)
 
@@ -198,12 +186,10 @@ def deteksi_hilang_kendali(video_path, esp32_ip):
 def open_detection(detection_type, esp32_ip):
     if detection_type == "Deteksi Kantuk":
         deteksi_kantuk(esp32_ip)
-    elif detection_type == "Deteksi Hilang Kendali 1":
-        deteksi_hilang_kendali("road.mp4", esp32_ip)
-    elif detection_type == "Deteksi Hilang Kendali 2":
-        deteksi_hilang_kendali("TERKENDALI.mp4", esp32_ip)
-    elif detection_type == "Deteksi Hilang Kendali 3":
-        deteksi_hilang_kendali("WhatsApp Video 2024-08-30 at 21.27.48.mp4", esp32_ip)
+    elif detection_type == "Deteksi Hilang Kendali":
+        deteksi_hilang_kendali("./public/offtrack.mp4", esp32_ip)
+    elif detection_type == "Deteksi Sesuai Jalur":
+        deteksi_hilang_kendali("./public/intrack.mp4", esp32_ip)
 
 
 def main():
@@ -227,16 +213,13 @@ def main():
     tk.Button(
         root,
         text="DETEKSI HILANG KENDALI",
-        command=lambda: start_detection("Deteksi Hilang Kendali 1"),
+        command=lambda: start_detection("Deteksi Hilang Kendali"),
     ).grid(row=1, column=1, padx=10, pady=10)
     tk.Button(
         root,
         text="DETEKSI SESUAI JALUR",
-        command=lambda: start_detection("Deteksi Hilang Kendali 2"),
+        command=lambda: start_detection("Deteksi Sesuai Jalur"),
     ).grid(row=2, column=0, padx=10, pady=10)
-    tk.Button(
-        root, text="X", command=lambda: start_detection("Deteksi Hilang Kendali 3")
-    ).grid(row=2, column=1, padx=10, pady=10)
 
     root.mainloop()
 
