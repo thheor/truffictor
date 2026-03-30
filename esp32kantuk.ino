@@ -1,22 +1,34 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 
-const char* ssid = "Truff";
-const char* password = "Truff12345";
+const char* ssid = "YOUR_SSID";
+const char* password = "YOUR_PASSWORD";
 
 AsyncWebServer server(80);
 
 const int buzzer1Pin = 5;
-const int buzzer2Pin = 18;
-const int buttonPin = 15;
+const int buzzer2Pin = 19;
+const int buttons[] = {15, 16, 17, 18};
+const int trigPin = 23;
+const int echoPin = 22;
 
-volatile bool buzzer2Active = false;
+long duration;
+int distanceCm;
+bool alarmActive = false;
+bool buttonsState[4] = {false, false, false, false};
 
-void IRAM_ATTR handleButtonPress() {
-  if (buzzer2Active) {
-    digitalWrite(buzzer2Pin, LOW);
-    buzzer2Active = false;
-  }
+void triggerAlarm() {
+  alarmActive = true;
+  digitalWrite(buzzer1Pin, HIGH);
+  digitalWrite(buzzer2Pin, HIGH);
+  for(int i = 0; i < 4; i++) buttonsState[i] = false;
+}
+
+void stopAlarm(){
+  alarmActive = false;
+  digitalWrite(buzzer1Pin, LOW);
+  digitalWrite(buzzer2Pin, LOW);
+  Serial.println("Alarm stopped");
 }
 
 void setup() {
@@ -33,31 +45,51 @@ void setup() {
 
   pinMode(buzzer1Pin, OUTPUT);
   pinMode(buzzer2Pin, OUTPUT);
-  pinMode(buttonPin, INPUT_PULLUP);
+  for(int i = 0; i < 4; i++) pinMode(buttons[i], INPUT_PULLUP);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
   digitalWrite(buzzer1Pin, LOW);
   digitalWrite(buzzer2Pin, LOW);
 
-  attachInterrupt(digitalPinToInterrupt(buttonPin), handleButtonPress, FALLING);
-
-  server.on("/buzzer1", HTTP_GET, [](AsyncWebServerRequest *request){
-    digitalWrite(buzzer1Pin, HIGH);
-    delay(500);
-    digitalWrite(buzzer1Pin, LOW);
-    request->send(200, "text/plain", "Buzzer 1 aktif");
-  });
-
-  server.on("/buzzer2", HTTP_GET, [](AsyncWebServerRequest *request){
-    digitalWrite(buzzer2Pin, HIGH);
-    buzzer2Active = true; 
-    delay(10000);
-    if (buzzer2Active) {
-      digitalWrite(buzzer2Pin, LOW);
-      buzzer2Active = false;
-    }
+  server.on("/trigger", HTTP_GET, [](AsyncWebServerRequest *request){
+    triggerAlarm();
+    request->send(200, "text/plain", "Alarm triggered");
   });
 
   server.begin();
 }
 
 void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+  distanceCm = duration * 0.034 / 2;
+  if(distanceCm < 200 && distanceCm > 0){
+    if(!alarmActive) triggerAlarm();
+
+  }
+
+  if(alarmActive){
+    bool allPressed = true;
+    for(int i = 0; i < 4; i++){
+      if(digitalRead(buttons[i])== LOW){
+        buttonsState[i] = true;
+      }
+
+      if(buttonsState[i] == false){
+        allPressed = false;
+      }
+    }
+
+    if(alarmActive){
+      stopAlarm();
+    }
+  }
+
+  delay(100);
 }
