@@ -15,6 +15,7 @@ const int echoPin = 22;
 long duration;
 int distanceCm;
 bool alarmActive = false;
+bool isDrowsiness = true;
 bool buttonsState[4] = {false, false, false, false};
 
 void triggerAlarm() {
@@ -71,10 +72,10 @@ void loop() {
   distanceCm = duration * 0.034 / 2;
   if(distanceCm < 200 && distanceCm > 0){
     if(!alarmActive) triggerAlarm();
-
+    isDrowsiness = false;
   }
 
-  if(alarmActive){
+  if(alarmActive && isDrowsiness){
     bool allPressed = true;
     for(int i = 0; i < 4; i++){
       if(digitalRead(buttons[i])== LOW){

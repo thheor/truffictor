@@ -151,7 +151,7 @@ def check_lines_in_box(image, lines, box, esp32_ip, sensor_id):
                     (0, 0, 255),
                     2,
                 )
-                requests.get(f"http://{esp32_ip}/buzzer1")
+                requests.get(f"http://{esp32_ip}/trigger")
                 return True
     return False
 
