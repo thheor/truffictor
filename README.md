@@ -70,6 +70,7 @@ Pair ESP32 to bread board then connect all the components as per the following t
 |Push button 4   |  18  |
 |Trig Pin   |  23  |
 |Echo Pin   |  22  |
+
 All negative pin of each components should be connected to GND. Your final diagram should look like this.
 
 ![circuit design](./public/circuit-design.jpg)
@@ -86,7 +87,7 @@ You can use any code editor, but I recommend using [Arduino IDE](https://www.ard
 4. Select the right ESP32 board and COM port
 5. Compile and upload code to ESP32 board by clicking **Upload** button on arrow right icon on top left corner
 6. You will see the IP address of your ESP32 in Output section on Arduino IDE
-7. Create a hotspot in your smartphone and update your ESP32 code to the name of SSID and the password you make.
+7. Create a hotspot in your smartphone and update your ESP32 code to the name of SSID and the password you have made.
 
    | SSID      | Password   |
    | --------- | ---------- |
