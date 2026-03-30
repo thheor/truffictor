@@ -16,22 +16,21 @@
 - **Auditory and Visual Warnings:** Activates buzzers and LED signals to wake the driver.
 - **Visual Road Tracker:** Visualize the road markings and give alert if the truck escape from the path.
 
----
-
 ## Installation 🚀
 
 ### Prerequisites 🛠
 
 - Python 3.7 - 3.12 (Latest version of Pyhton (3.13) is not officially supported by the standard MediaPipe package via PyPi)
-- ESP32, Arduino, Rasberry Pi, or other microcontroller
+- ESP32, Arduino (with WiFi built-in feature), Rasberry Pi, or other microcontroller
 - Webcam
 - Buzzer: 5V
-- LED lamp
+- LED lamp (optional)
 - Push button
 - Bread board
 - Jumper cable
+- Ultrasonic sensor HC-SR04
 
-_Note: If you don't have the hardware in prerequisites, you can skip **Step 2 & 3** and input a random ip in the last step._
+_Note: If you don't have the hardwares included in prerequisites, you can skip **Step 2 & 3** and input a random ip after you run the python code._
 
 ### Step 1: Set Up Environment
 
@@ -50,6 +49,8 @@ source venv/bin/activate # On Linux or MacOs
 venv\Scripts\activate # On Windows
 ```
 
+If you are on Linux, you need to add ![DejaVu Sans](https://dejavu-fonts.github.io/) font in `venv/lib/python3.11/site-packages/cv2/qt/fonts/`.
+
 2. Install Dependencies
 
 ```bash
@@ -60,9 +61,19 @@ _Note: If you are on Linux, you need to install `python3-tk` via your package ma
 
 ### Step 2: Wiring Diagram
 
-Pair ESP32 to bread board then connect buzzer1's pin to 5, buzzer2's pin to 18, and button's pin to 15. Every negative pin of every buzzer must be connected to GND. Your final circuit should look like this
-
-**IMAGE**
+Pair ESP32 to bread board then connect all the components as per the following table.
+| Components | Pin |
+|------------|-----|
+|Buzzer 1    |  5  |
+|Buzzer 2    |  19  |
+|Push button 1   |  15  |
+|Push button 2    |  16  |
+|Push button 3   |  17  |
+|Push button 4   |  18  |
+|Trig Pin   |  23  |
+|Echo Pin   |  22  |
+All negative pin of each components should be connected to GND. Your final diagram should look like this.
+![circuit design](./public/circuit-design.jpg)
 
 ### Step 3: Set Up ESP32 Code
 
@@ -76,11 +87,11 @@ You can use any code editor, but I recommend using [Arduino IDE](https://www.ard
 4. Select the right ESP32 board and COM port
 5. Compile and upload code to ESP32 board by clicking **Upload** button on arrow right icon on top left corner
 6. You will see the IP address of your ESP32 in Output section on Arduino IDE
-7. Connect the WiFi from your smartphone to
+7. Create a hotspot in your smartphone and update your ESP32 code to the name of SSID and the password you make.
 
    | SSID      | Password   |
    | --------- | ---------- |
-   | **Truff** | Truff12345 |
+   | YOUR_SSID | YOUR_PASSWORD |
 
 ---
 
